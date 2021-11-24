@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+
+    ports:
+      - '3306:3306'
+    volumes:
+#      - .C/IDEA/HW/Java/Autom/Auto-HW-8/src/test/resources:/var/lib/mysql
+
+      - ./C/IDEA/HW/Java/Autom/Auto-HW-8/docker-entrypoint-initdb.d:/var/lib/mysql
+
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=pass
+
+
+#java -jar app-deadline.jar -P:jdbc.url=jdbc:mysql://localhost:3306/app -P:jdbc.user=app -P:jdbc.password=pass
