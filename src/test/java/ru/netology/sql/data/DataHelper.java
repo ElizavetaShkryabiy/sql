@@ -1,6 +1,5 @@
 package ru.netology.sql.data;
 
-import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,41 +45,7 @@ public class DataHelper {
             DbUtils.close(conn);
         }
     }
-//
-//
-//    @SneakyThrows
-//    public static AuthInfo getInvalidLogin() {
-//        var runner = new QueryRunner();
-//        Faker faker = new Faker();
-//        var user = "SELECT id,login, password FROM users;";
-//        try (
-//                var conn = DriverManager.getConnection(DB_URL, USER, PASS);
-//        ) {
-//            var first = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
-//            var login = faker.name().username();
-//            var pass = "qwerty123";
-//            var id = first.id;
-//            return new AuthInfo(login, pass, id);
-//        }
-//    }
-//
-    @SneakyThrows
-    public static AuthInfo getInvalidPassword() {
-        var runner = new QueryRunner();
-        Faker faker = new Faker();
-        var user = "SELECT id,login, password FROM users;";
-        DbUtils.loadDriver(JDBC_DRIVER);
-        var conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        try {
-            var first = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
-            var login = first.login;
-            var pass = faker.number().toString();
-            var id = first.id;
-            return new AuthInfo(login, pass, id);
-        } finally {
-            DbUtils.close(conn);
-        }
-    }
+
 
     @AllArgsConstructor
     @NoArgsConstructor

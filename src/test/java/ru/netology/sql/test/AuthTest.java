@@ -1,23 +1,19 @@
 package ru.netology.sql.test;
 
+import lombok.Cleanup;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import ru.netology.sql.data.DataHelper;
+import ru.netology.sql.data.RestartInfo;
 import ru.netology.sql.page.LoginPage;
 import ru.netology.sql.page.VerificationPage;
-
-import java.sql.SQLException;
 
 import static com.codeborne.selenide.Selenide.open;
 
 
 class AuthTest {
 
-//    @AfterAll
-//    void setAllUp(){
-//        RestartInfo restart = new RestartInfo();
-//        restart.restartDB();
-//    }
 
     @SneakyThrows
     @Test
@@ -47,7 +43,7 @@ class AuthTest {
     }
 
     @Test
-    void shouldGiveErrorNotificationIfWrongVCode() throws SQLException {
+    void shouldGiveErrorNotificationIfWrongVCode()  {
         var loginPage = open("http://localhost:9999", LoginPage.class);
         var authInfo = DataHelper.getValidAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
