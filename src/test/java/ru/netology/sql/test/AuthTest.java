@@ -8,25 +8,28 @@ import ru.netology.sql.data.DataHelper;
 import ru.netology.sql.data.RestartInfo;
 import ru.netology.sql.page.LoginPage;
 
+import java.sql.SQLException;
+
 import static com.codeborne.selenide.Selenide.open;
 
 
 class AuthTest {
-    @AfterEach
-    void setUp() {
-        RestartInfo restart = new RestartInfo();
-        restart.renewCode();
-    }
-    @AfterAll
-    void setAllUp(){
-        RestartInfo restart = new RestartInfo();
-        restart.restartDB();
-    }
+//    @AfterEach
+//    void setUp() {
+//        RestartInfo restart = new RestartInfo();
+//        restart.renewCode();
+//    }
+//    @AfterAll
+//    void setAllUp(){
+//        RestartInfo restart = new RestartInfo();
+//        restart.restartDB();
+//    }
 
+    @SneakyThrows
     @Test
     void shouldLogInSuccessfully() {
         var loginPage = open("http://localhost:9999", LoginPage.class);
-        var authInfo = DataHelper.getValidAuthInfo(1);
+        var authInfo = DataHelper.getValidAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
         var verificationCode = DataHelper.getVerificationCode(authInfo);
         verificationPage.validVerify(verificationCode);
@@ -51,9 +54,9 @@ class AuthTest {
     }
 
     @Test
-    void shouldGiveErrorNotificationIfWrongVCode(){
+    void shouldGiveErrorNotificationIfWrongVCode() throws SQLException {
         var loginPage = open("http://localhost:9999", LoginPage.class);
-        var authInfo = DataHelper.getValidAuthInfo(1);
+        var authInfo = DataHelper.getValidAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
         verificationPage.inValidVerify();
         verificationPage.errorNotification();
