@@ -15,9 +15,9 @@ public class VerificationPage {
   private SelenideElement verifyButton = $("[data-test-id=action-verify]");
   static final Faker faker = new Faker(Locale.forLanguageTag("eng"));
 
-  public VerificationPage() {
-    codeField.shouldBe(visible);
-  }
+//  public VerificationPage() {
+//    codeField.shouldBe(visible);
+//  }
 
   public DashboardPage validVerify(DataHelper.VerificationCode code) {
     codeField.setValue(code.getCode());
@@ -32,5 +32,9 @@ public class VerificationPage {
   public void errorNotification(){
     $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
             .shouldHave(text("Ошибка! Неверно указан код! Попробуйте ещё раз."));
+  }
+  public void errorNotificationBlocked(){
+    $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
+            .shouldHave(text("Ошибка! Превышено количество попыток ввода"));
   }
 }

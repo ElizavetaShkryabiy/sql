@@ -1,12 +1,9 @@
 package ru.netology.sql.page;
 
 import com.codeborne.selenide.SelenideElement;
-import lombok.SneakyThrows;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
+import com.github.javafaker.Faker;
 import ru.netology.sql.data.DataHelper;
 
-import java.sql.DriverManager;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.appear;
@@ -17,6 +14,7 @@ public class LoginPage {
     private SelenideElement loginField = $("[data-test-id=login] input");
     private SelenideElement passwordField = $("[data-test-id=password] input");
     private SelenideElement loginButton = $("[data-test-id=action-login]");
+    Faker faker = new Faker();
 
 
     public VerificationPage validLogin(DataHelper.AuthInfo info) {
@@ -25,14 +23,12 @@ public class LoginPage {
         loginButton.click();
         return new VerificationPage();
     }
-    public void errorNotification(){
+    public DataHelper.AuthInfo inValidData() {
+        loginField.setValue(faker.name().username());
+        passwordField.setValue(faker.number().toString());
+        loginButton.click();
         $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
                 .shouldHave(text("Ошибка! Неверно указан логин или пароль"));
+        return new DataHelper.AuthInfo();
     }
-
-    public void errorNotificationBlocked(){
-        $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
-                .shouldHave(text("Ошибка! Пользователь заблокирован"));
-    }
-
 }

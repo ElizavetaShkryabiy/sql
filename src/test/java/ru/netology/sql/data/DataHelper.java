@@ -1,13 +1,15 @@
 package ru.netology.sql.data;
 
 import com.github.javafaker.Faker;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class DataHelper {
 
@@ -44,24 +46,24 @@ public class DataHelper {
             DbUtils.close(conn);
         }
     }
-
-
-    @SneakyThrows
-    public static AuthInfo getInvalidLogin() {
-        var runner = new QueryRunner();
-        Faker faker = new Faker();
-        var user = "SELECT id,login, password FROM users;";
-        try (
-                var conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        ) {
-            var first = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
-            var login = faker.name().username();
-            var pass = "qwerty123";
-            var id = first.id;
-            return new AuthInfo(login, pass, id);
-        }
-    }
-
+//
+//
+//    @SneakyThrows
+//    public static AuthInfo getInvalidLogin() {
+//        var runner = new QueryRunner();
+//        Faker faker = new Faker();
+//        var user = "SELECT id,login, password FROM users;";
+//        try (
+//                var conn = DriverManager.getConnection(DB_URL, USER, PASS);
+//        ) {
+//            var first = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
+//            var login = faker.name().username();
+//            var pass = "qwerty123";
+//            var id = first.id;
+//            return new AuthInfo(login, pass, id);
+//        }
+//    }
+//
     @SneakyThrows
     public static AuthInfo getInvalidPassword() {
         var runner = new QueryRunner();
@@ -91,10 +93,10 @@ public class DataHelper {
     public static VerificationCode getVerificationCode(AuthInfo authInfo) {
         var id = authInfo.getId();
         var runner = new QueryRunner();
-        var vCode = "SELECT code FROM auth_codes WHERE user_id = ?";
+        var vCode = "SELECT code FROM auth_codes WHERE user_id = ? AND created < NOW() - INTERVAL 1 SECOND ;";
         try (                var conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             var authCode = runner.query(conn, vCode, new BeanHandler<>(VerificationCode.class), id);
-            var code = authCode.code;
+            var code = authCode.getCode();
             return new VerificationCode(code);
         }
     }
