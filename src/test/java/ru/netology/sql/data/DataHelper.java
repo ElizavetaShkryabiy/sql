@@ -1,8 +1,7 @@
 package ru.netology.sql.data;
 
 import com.github.javafaker.Faker;
-import lombok.SneakyThrows;
-import lombok.Value;
+import lombok.*;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -20,7 +19,9 @@ public class DataHelper {
     static final String USER = "app";
     static final String PASS = "pass";
 
-    @Value
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
     public static class AuthInfo {
         String login;
         String password;
@@ -36,7 +37,7 @@ public class DataHelper {
         try {
             var resultHandler = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
             var login = resultHandler.getLogin();
-            var pass = resultHandler.getPassword();
+            var pass = "qwerty123";
             var id = resultHandler.getId();
             return new AuthInfo(login, pass, id);
         } finally {
@@ -55,7 +56,7 @@ public class DataHelper {
         ) {
             var first = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
             var login = faker.name().username();
-            var pass = first.password;
+            var pass = "qwerty123";
             var id = first.id;
             return new AuthInfo(login, pass, id);
         }
@@ -79,7 +80,9 @@ public class DataHelper {
         }
     }
 
-    @Value
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
     public static class VerificationCode {
         private String code;
     }

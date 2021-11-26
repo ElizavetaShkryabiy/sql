@@ -19,6 +19,7 @@ class AuthTest {
 //        RestartInfo restart = new RestartInfo();
 //        restart.renewCode();
 //    }
+
 //    @AfterAll
 //    void setAllUp(){
 //        RestartInfo restart = new RestartInfo();
@@ -28,6 +29,7 @@ class AuthTest {
     @SneakyThrows
     @Test
     void shouldLogInSuccessfully() {
+
         var loginPage = open("http://localhost:9999", LoginPage.class);
         var authInfo = DataHelper.getValidAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -40,7 +42,7 @@ class AuthTest {
     void shouldGiveErrorNotificationIfWrongUser(){
         var loginPage = open("http://localhost:9999", LoginPage.class);
         var authInfo = DataHelper.getInvalidLogin();
-        var verificationPage = loginPage.validLogin(authInfo);
+        loginPage.validLogin(authInfo);
         loginPage.errorNotification();
 
     }
@@ -49,7 +51,7 @@ class AuthTest {
     void shouldGiveErrorNotificationIfWrongPassword(){
         var loginPage = open("http://localhost:9999", LoginPage.class);
         var authInfo = DataHelper.getInvalidPassword();
-        var verificationPage = loginPage.validLogin(authInfo);
+        loginPage.validLogin(authInfo);
         loginPage.errorNotification();
     }
 

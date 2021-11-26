@@ -22,7 +22,7 @@ public class RestartInfo {
     }
 
     @SneakyThrows
-    public void restartDB() {
+    public static void restartDB() {
         var runner = new QueryRunner();
         var dUsers = "DROP DATABASE app";
         try (
