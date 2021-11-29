@@ -23,12 +23,11 @@ public class LoginPage {
         loginButton.click();
         return new VerificationPage();
     }
-    public DataHelper.AuthInfo inValidData() {
+    public void inValidData() {
         loginField.setValue(faker.name().username());
         passwordField.setValue(faker.number().toString());
         loginButton.click();
         $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
                 .shouldHave(text("Ошибка! Неверно указан логин или пароль"));
-        return new DataHelper.AuthInfo();
     }
 }

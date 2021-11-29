@@ -1,9 +1,6 @@
 package ru.netology.sql.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -20,9 +17,7 @@ public class DataHelper {
     static final String USER = "app";
     static final String PASS = "pass";
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
+    @Value
     public static class AuthInfo {
         String login;
         String password;
@@ -30,20 +25,8 @@ public class DataHelper {
     }
 
     @SneakyThrows
-    public static AuthInfo getValidAuthInfo(){
-        String user = "SELECT id, login, password FROM users;";
-        var runner = new QueryRunner();
-        DbUtils.loadDriver(JDBC_DRIVER);
-        var conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        try {
-            var resultHandler = runner.query(conn, user, new BeanHandler<>(AuthInfo.class));
-            var login = resultHandler.getLogin();
-            var pass = "qwerty123";
-            var id = resultHandler.getId();
-            return new AuthInfo(login, pass, id);
-        } finally {
-            DbUtils.close(conn);
-        }
+    public static AuthInfo getValidAuthInfo() {
+        return new AuthInfo("vasya", "qwerty123", "973ab279-d2d1-4c04-94ea-e6c857f9d919");
     }
 
 
@@ -56,13 +39,12 @@ public class DataHelper {
 
     @SneakyThrows
     public static VerificationCode getVerificationCode(AuthInfo authInfo) {
-        var id = authInfo.getId();
         var runner = new QueryRunner();
-        var vCode = "SELECT code FROM auth_codes WHERE user_id = ? AND created < NOW() - INTERVAL 1 SECOND ;";
-        try (                var conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
-            var authCode = runner.query(conn, vCode, new BeanHandler<>(VerificationCode.class), id);
-            var code = authCode.getCode();
-            return new VerificationCode(code);
+        var vCode = "SELECT code FROM auth_codes INNER JOIN users ON auth_codes.user_id = users.id" +
+                " WHERE users.login = ? ORDER BY auth_codes.created DESC LIMIT 1";
+        try (var conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            var authCode = runner.query(conn, vCode, new BeanHandler<>(VerificationCode.class), authInfo.getLogin());
+            return authCode;
         }
     }
 }

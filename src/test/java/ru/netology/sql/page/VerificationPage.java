@@ -35,6 +35,6 @@ public class VerificationPage {
   }
   public void errorNotificationBlocked(){
     $("[data-test-id=error-notification]").shouldBe(appear, Duration.ofSeconds(7))
-            .shouldHave(text("Ошибка! Превышено количество попыток ввода"));
+            .shouldHave(text("Ошибка! Превышено количество попыток ввода кода!"));
   }
 }

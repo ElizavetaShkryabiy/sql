@@ -12,14 +12,20 @@ public class RestartInfo {
     static final String USER = "app";
     static final String PASS = "pass";
     @SneakyThrows
-    public static void restartDB() {
+    public static void cleanUp() {
 
-        var dUsers = "DELETE FROM app.users, app.auth_codes, app.card_transactions, app.cards ;";
+        var dUsers = "DELETE FROM app.users;";
+        var dAuthCodes = "DELETE FROM app.auth_codes;";
+        var dTransactions = "DELETE FROM app.card_transactions;";
+        var dCards = "DELETE FROM app.cards;";
         var runner = new QueryRunner();
         DbUtils.loadDriver(JDBC_DRIVER);
         var conn = DriverManager.getConnection(DB_URL, USER, PASS);
         try {
-           runner.update(conn, dUsers);
+            runner.execute(conn, dAuthCodes);
+            runner.execute(conn, dTransactions);
+            runner.execute(conn, dCards);
+            runner.execute(conn, dUsers);
 
         } finally {
             DbUtils.close(conn);

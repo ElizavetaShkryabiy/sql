@@ -1,6 +1,5 @@
 package ru.netology.sql.test;
 
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -30,16 +29,14 @@ class AuthTest {
     @Test
     void shouldGiveErrorNotificationIfWrongUser() {
         var loginPage = open("http://localhost:9999", LoginPage.class);
-        var authInfo = loginPage.inValidData();
-        loginPage.validLogin(authInfo);
+       loginPage.inValidData();
 
     }
 
     @Test
     void shouldGiveErrorNotificationIfWrongPassword() {
         var loginPage = open("http://localhost:9999", LoginPage.class);
-        var authInfo = loginPage.inValidData();
-        loginPage.validLogin(authInfo);
+        loginPage.inValidData();
     }
 
     @Test
@@ -63,6 +60,9 @@ class AuthTest {
         verificationPage.inValidVerify();
         verificationPage.errorNotificationBlocked();
     }
-
+    @AfterAll
+    public static void cleanUp(){
+        RestartInfo.cleanUp();
+    }
 }
 
